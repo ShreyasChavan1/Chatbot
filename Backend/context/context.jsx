@@ -126,7 +126,13 @@ const ContextProvider = (props) => {
       setActiveThreadId(threadId);
     }
     const response = await res.json();
-    const reply = response?.response || "Sorry, Gemini failed to answer.";
+    const rawReply = response?.response || "Sorry, Gemini failed to answer.";
+    const normalizeText = (text) =>
+  text
+    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // turn **bold** → <b>bold</b>
+    .replace(/\*(?!\*)(.*?)\*/g, "• $1")    // single * → bullet point
+    .replace(/\n{2,}/g, "\n");              // collapse big gaps
+   const reply = normalizeText(rawReply);
 
 
     const usermsg = {

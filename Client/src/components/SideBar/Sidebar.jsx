@@ -10,7 +10,7 @@ import { db } from '../../../../Backend/lib/firebase';
 
 const Sidebar = () => {
     
-    const {setPass,setEmail,extended,setExtended,onSent,threads,openThread,createnewThread,setShowResult} = useContext(Context);
+    const {setPass,setEmail,extended,setExtended,onSent,threads,openThread,createnewThread,deleteThread} = useContext(Context);
     
     const signOutLogic = async() =>{
         await signOut(auth);
@@ -43,16 +43,24 @@ const Sidebar = () => {
     <div
       key={t.id}
       className="recent-entry"
-      onClick={() => openThread(t.id)}
     >
-      <img src={assets.message_icon} alt="" />
-      <p>
-        {preview
-          ? preview.length > 20
-            ? preview.slice(0, 20) + "..."
-            : preview
-          : "New Chat"}
-      </p>
+      <div onClick={() => openThread(t.id)}>
+        <img src={assets.message_icon} alt="" />
+        <p>
+          {preview
+            ? preview.length > 20
+              ? preview.slice(0, 20) + "..."
+              : preview
+            : "New Chat"}
+        </p>
+      </div>
+      <img
+      src={assets.delete_icon}
+      onClick={(e) => {
+        e.stopPropagation();   // so you don’t open the chat by accident
+        deleteThread(t.id);
+      }}
+    />
     </div>
   );
 })}

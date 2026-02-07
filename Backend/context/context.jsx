@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from "react";
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from "../lib/firebase";
-import { doc, updateDoc, getDocs, setDoc, onSnapshot, collection, serverTimestamp, addDoc, orderBy } from "firebase/firestore";
+import { doc, deleteDoc, getDocs, setDoc, onSnapshot, collection, serverTimestamp, addDoc, orderBy } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { arrayUnion, query } from "firebase/firestore";
 
@@ -58,6 +58,46 @@ const ContextProvider = (props) => {
     setConversation([]);
 
   }
+
+
+const deleteThread = async (threadId) => {
+  try {
+    const messagesRef = collection(
+      db,
+      "userChats",
+      user.uid,
+      "threads",
+      threadId,
+      "messages"
+    );
+
+    const snap = await getDocs(messagesRef);
+
+    // delete all messages first
+    const deletes = snap.docs.map(d => deleteDoc(d.ref));
+    await Promise.all(deletes);
+
+    // now delete the thread itself
+    const threadRef = doc(
+      db,
+      "userChats",
+      user.uid,
+      "threads",
+      threadId
+    );
+
+    await deleteDoc(threadRef);
+
+    // clean your local UI
+    setActiveThreadId(null);
+    setConversation([]);
+    setShowResult(false);
+
+  } catch (err) {
+    console.error("Delete failed:", err);
+  }
+};
+
 
   const openThread = async (threadId) => {
     setActiveThreadId(threadId);
@@ -127,13 +167,61 @@ const ContextProvider = (props) => {
     }
     const response = await res.json();
     const rawReply = response?.response || "Sorry, Gemini failed to answer.";
-    const normalizeText = (text) =>
-  text
-    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-    .replace(/^\s*\*(?!\*)(.*)$/gm, "• $1")
-    .replace(/^-{3,}$/gm, "")
-    .replace(/\n{2,}/g, "\n")
-    .trim();              // collapse big gaps
+    
+const normalizeText = (text) => {
+  if (!text) return "";
+
+  let lines = text.split("\n");
+
+  let html = "";
+  let inList = false;
+
+  lines.forEach(line => {
+    line = line.trim();
+
+    if (!line) {
+      html += "<br>";
+      return;
+    }
+
+    // Headings: ### Title → <h3>Title</h3>
+    if (line.startsWith("###")) {
+      const heading = line.replace(/^#{1,6}\s*/, "");
+      html += `<h3>${heading}</h3>`;
+      return;
+    }
+
+    // Bold: **text** → <b>text</b>
+    line = line.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+
+    // Bullet points: * item → <li>item</li>
+    if (line.startsWith("*") || line.startsWith("•")) {
+      if (!inList) {
+        html += "<ul>";
+        inList = true;
+      }
+      const item = line.replace(/^[*•]\s*/, "");
+      html += `<li>${item}</li>`;
+      return;
+    }
+
+    // If we were in a list and hit a normal line, close list
+    if (inList) {
+      html += "</ul>";
+      inList = false;
+    }
+
+    // Normal paragraph
+    html += `<p>${line}</p>`;
+  });
+
+  if (inList) html += "</ul>";
+
+  return html;
+};
+
+    
+    // collapse big gaps
    const reply = normalizeText(rawReply);
 
 
@@ -189,7 +277,7 @@ const ContextProvider = (props) => {
     setEmail,
     pass,
     setPass,
-
+    deleteThread,
 
 
 

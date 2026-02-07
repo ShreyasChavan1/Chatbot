@@ -46,7 +46,7 @@ const Main = (props) => {
 
     <div key={i} className="result-data">
       <img src={assets.gemini_icon} alt="" />
-      <p>{m.text}</p>
+      <p dangerouslySetInnerHTML={{__html: m.text}}></p>
     </div>
 
   )

@@ -129,9 +129,11 @@ const ContextProvider = (props) => {
     const rawReply = response?.response || "Sorry, Gemini failed to answer.";
     const normalizeText = (text) =>
   text
-    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // turn **bold** → <b>bold</b>
-    .replace(/\*(?!\*)(.*?)\*/g, "• $1")    // single * → bullet point
-    .replace(/\n{2,}/g, "\n");              // collapse big gaps
+    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+    .replace(/^\s*\*(?!\*)(.*)$/gm, "• $1")
+    .replace(/^-{3,}$/gm, "")
+    .replace(/\n{2,}/g, "\n")
+    .trim();              // collapse big gaps
    const reply = normalizeText(rawReply);
 
 

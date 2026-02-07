@@ -1,20 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import './Main.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../../../Backend/context/context';
-import { doc, setDoc , getDoc} from 'firebase/firestore';
-import { auth, db } from '../../../../Backend/lib/firebase';
+import { auth } from '../../../../Backend/lib/firebase';
 import { signOut } from 'firebase/auth';
 
 
 
 
-const Main = (props) => {
+const Main = () => {
   const {setInput,input,onSent,loading,showResult,setPass,setEmail,setShowResult,username,conversation} = useContext(Context);
 
    const signOutl = async() =>{
     await signOut(auth);
-    // setUser("");
+    
     setPass("");
     setEmail("");
 }

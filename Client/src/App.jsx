@@ -4,6 +4,7 @@ import Main from './components/Main/Main'
 import Login from './components/Auth/login'
 import { useContext } from 'react';
 import { Context } from '../../Backend/context/context';
+import AuthPage from './components/Auth/auth';
 
 
 
@@ -12,7 +13,7 @@ const App = () => {
   return (
     <>
       {
-        user ?
+        user && user.emailVerified ?
           (
             <>
               <Sidebar />
@@ -20,7 +21,8 @@ const App = () => {
             </>
           )
           : (
-            <Login />
+
+            <AuthPage />
           )
       }
 

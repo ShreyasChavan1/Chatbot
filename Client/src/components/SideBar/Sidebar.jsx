@@ -10,7 +10,7 @@ import { db } from '../../../../Backend/lib/firebase';
 
 const Sidebar = () => {
     
-    const {setPass,setEmail,extended,setExtended,onSent,threads,openThread,createnewThread,deleteThread} = useContext(Context);
+    const {setPass,setEmail,extended,setExtended,onSent,threads,openThread,createnewThread,deleteThread,loading} = useContext(Context);
     
     const signOutLogic = async() =>{
         await signOut(auth);
@@ -43,17 +43,18 @@ const Sidebar = () => {
     <div
       key={t.id}
       className="recent-entry"
+      onClick={() => openThread(t.id)}
     >
-      <div onClick={() => openThread(t.id)}>
+      
         <img src={assets.message_icon} alt="" />
-        <p>
-          {preview
+        <p dangerouslySetInnerHTML={{__html: preview
             ? preview.length > 20
               ? preview.slice(0, 20) + "..."
               : preview
-            : "New Chat"}
+            : "New Chat"}}>
+          
         </p>
-      </div>
+      
       <img
       src={assets.delete_icon}
       onClick={(e) => {
@@ -70,7 +71,7 @@ const Sidebar = () => {
         </div>
         <div className="bottom">
             <div className="bottom-item recent-entry">
-                <img onClick={()=>onSent("Please help me with usage of google Gemini")} src={assets.question_icon} alt="" />
+                <img onClick={()=>onSent("Please help me with usage of google Gemini")} className={loading ? "blinking" : ""} src={assets.question_icon} alt="" />
                 {extended?<p>Help</p>:null}
             </div>
             

@@ -1,123 +1,74 @@
-import React, { useState } from 'react'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import './login.css';
-import { db, auth } from '../../../../Backend/lib/firebase';
-import { doc, setDoc } from 'firebase/firestore';
-import { useContext } from 'react';
-import { Context } from '../../../../Backend/context/context';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { setDoc, doc,getDoc, deleteDoc } from "firebase/firestore";
+import { auth, db } from "../../../../Backend/lib/firebase";
 
+export default function LoginForm({ email, setEmail, pass, setPass, load, setLoad ,setUsername}) {
 
-const Login = () => {
-
-  const [load, setLoad] = useState(false);
-
-  const { email, setEmail, pass, setPass, setUsername ,username} = useContext(Context);
-
-
-  const handleRegister = async (e) => {
+  const googleLogin = async () => {
     try {
-      e.preventDefault();
       setLoad(true);
-
-      const res = await createUserWithEmailAndPassword(auth, email, pass);
-
-      // Send verification email
-      await sendEmailVerification(res.user);
-      alert("Check your inbox and verify your email. Then log in again.");
-
-      if (typeof username !== "string" || !username.trim()) {
-  alert("Please enter a valid username.");
-  setLoad(false);
-  return;
-}
-
-      // Create user profile anyway
-      await setDoc(doc(db, "user", res.user.uid), {
-        username: username.trim(),
-        email,
-        id: res.user.uid,
-        verified: false
-      });
-
-      // Create empty chat doc
-      await setDoc(doc(db, "userChats", res.user.uid), {
-        chats: {}
-      });
-
-    } catch (error) {
-      console.log(error);
-      alert(error.message || "Registration failed");
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      alert(err.message);
     } finally {
       setLoad(false);
     }
   };
 
-  const handleLogin = async (e) => {
-    try {
-      e.preventDefault()
-      setLoad(true);
-      let res = await signInWithEmailAndPassword(auth, email, pass)
-       if (!res.user.emailVerified) {
-    alert("Verify your email first.");
-    setLoad(false);
-    return;
-  }
-    
-    } catch (error) {
-      console.log(error)
-      alert(error);
-    } finally {
-      setLoad(false);
-    }
-  }
   return (
-    <>
-      <div className="form-container">
-        <main className="form-signin">
-          <form>
-            <h1 className="form-title">Please sign in</h1>
+    <div className="auth-box">
+      <h2>Login</h2>
 
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-input"
-                id="username"
-                placeholder="Username"
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-              <input
-  type="email"
-  value={email}
-  className="form-input"
-  id="Email"
-  placeholder="Email"
-  onChange={(e) => setEmail(e.target.value)}
-  required
-/>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
 
-              <input
-                type="password"
-                value={pass}
-                className="form-input"
-                id="pass"
-                placeholder="Pass"
-                required
-                onChange={(e) => setPass(e.target.value)}
-              />
+      />
 
-            </div>
+      <input
+        type="password"
+        placeholder="Password"
+        value={pass}
+        onChange={e => setPass(e.target.value)}
+      />
 
-            <div className="error-message"></div>
+      <button disabled={load} onClick={async (e) => {
+        e.preventDefault();
+        setLoad(true);
+        const res = await signInWithEmailAndPassword(auth, email, pass);
+        console.log(res)
+        res.user.reload();
+        if (res.user.emailVerified) {
+          await setDoc(
+            doc(db, "user", res.user.uid),
+            { verified: true },
+            { merge: true }
+          );
+          setEmail("");
+          setPass("");
+          const userRef = doc(db, "user", res.user.uid);
+const snap = await getDoc(userRef);
 
-            <button disabled={load} type="submit" onClick={handleRegister} className="btn-submit">{load ? "loading" : "Register"}</button>
-            <button disabled={load} onClick={handleLogin} className="btn-submit">{load ? "loading" : "login"}</button>
-            <p className="form-footer">&copy; Shreyas Co.</p>
-          </form>
-        </main>
-      </div>
-    </>
-  )
+if (snap.exists()) {
+  setUsername(snap.data().username || "");
 }
 
-export default Login
+         
+        }else{
+         await deleteDoc(doc(db, "user", res.user.uid));
+        await res.user.delete(); 
+        }
+        setLoad(false);
+      }}>
+        {load ? "Loading..." : "Login"}
+      </button>
+
+      <div className="social-login">
+        <button onClick={googleLogin}>Continue with Google</button>
+      </div>
+    </div>
+  );
+}

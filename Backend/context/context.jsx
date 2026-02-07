@@ -2,9 +2,9 @@ import { createContext, useState, useEffect } from "react";
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from "../lib/firebase";
-import { doc, deleteDoc, getDocs, setDoc, onSnapshot, collection, serverTimestamp, addDoc, orderBy } from "firebase/firestore";
+import { doc, deleteDoc, getDocs, setDoc, onSnapshot, collection, serverTimestamp, addDoc, orderBy, getDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
-import { arrayUnion, query } from "firebase/firestore";
+import {  query } from "firebase/firestore";
 
 
 export const Context = createContext();
@@ -13,34 +13,35 @@ const ContextProvider = (props) => {
   const [extended, setExtended] = useState(false)
   //for generative Ai
   const [input, setInput] = useState("");
-  const [recentPrompts, setRecentPrompts] = useState("");
-  // const [prevPrompts,setPrevPrompts] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [resultData, setResultData] = useState("");
-
   const [username, setUsername] = useState("")
-
   //for login
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   //saving login cred
   const [user, setUser] = useState(false);
-
+  //conversation
   const [threads, setThreads] = useState([]);       // sidebar
   const [conversation, setConversation] = useState([]); // full chat
   const [activeThreadId, setActiveThreadId] = useState(null);
-
-
+//for changes in login logout
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+       if (!user) {
+      // User logged out — nuke all chat memory
+      setConversation([]);
+      setActiveThreadId(null);
+      setShowResult(false);
+    }
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
+  //changes in chats per login
   useEffect(() => {
     if (!user) return;
     const threadsRef = collection(db, "userChats", user.uid, "threads");
@@ -51,14 +52,27 @@ const ContextProvider = (props) => {
     return () => unsub();
   }, [user])
 
-  const createnewThread = async () => {
+  //for keeping the username
+  useEffect(() => {
+  if (!user) return;
 
+  const loadProfile = async () => {
+    const ref = doc(db, "user", user.uid);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      setUsername(snap.data().username || "");
+    }
+  };
+
+  loadProfile();
+}, [user]);
+
+  const createnewThread = async () => {
     setActiveThreadId(null);
     setShowResult(false)
     setConversation([]);
-
   }
-
 
 const deleteThread = async (threadId) => {
   try {
@@ -70,13 +84,10 @@ const deleteThread = async (threadId) => {
       threadId,
       "messages"
     );
-
     const snap = await getDocs(messagesRef);
-
     // delete all messages first
     const deletes = snap.docs.map(d => deleteDoc(d.ref));
     await Promise.all(deletes);
-
     // now delete the thread itself
     const threadRef = doc(
       db,
@@ -85,9 +96,7 @@ const deleteThread = async (threadId) => {
       "threads",
       threadId
     );
-
     await deleteDoc(threadRef);
-
     // clean your local UI
     setActiveThreadId(null);
     setConversation([]);
@@ -97,7 +106,6 @@ const deleteThread = async (threadId) => {
     console.error("Delete failed:", err);
   }
 };
-
 
   const openThread = async (threadId) => {
     setActiveThreadId(threadId);
@@ -110,20 +118,17 @@ const deleteThread = async (threadId) => {
     const msgs = snap.docs
       .map(d => d.data())
       .filter(m => typeof m.text === "string");
-
-
     setConversation(msgs)
   }
 
   const onSent = async (prompt) => {
     const message = prompt || input;
-
     if (!message.trim()) {
       return;
     }
     setLoading(true);
+    setShowResult(true)
     let threadId = activeThreadId;
-
 
     const geminiHistory = (conversation || [])
       .filter(m => typeof m.text === "string")   // kill bad messages
@@ -155,7 +160,6 @@ const deleteThread = async (threadId) => {
       const threadsRef = doc(
         collection(db, "userChats", user.uid, "threads")
       );
-
       await setDoc(threadsRef, {
         title: "New Chat",
         lastMessage: "",
@@ -172,28 +176,23 @@ const normalizeText = (text) => {
   if (!text) return "";
 
   let lines = text.split("\n");
-
   let html = "";
   let inList = false;
 
   lines.forEach(line => {
     line = line.trim();
-
     if (!line) {
       html += "<br>";
       return;
     }
-
     // Headings: ### Title → <h3>Title</h3>
     if (line.startsWith("###")) {
       const heading = line.replace(/^#{1,6}\s*/, "");
       html += `<h3>${heading}</h3>`;
       return;
     }
-
     // Bold: **text** → <b>text</b>
     line = line.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-
     // Bullet points: * item → <li>item</li>
     if (line.startsWith("*") || line.startsWith("•")) {
       if (!inList) {
@@ -204,27 +203,20 @@ const normalizeText = (text) => {
       html += `<li>${item}</li>`;
       return;
     }
-
     // If we were in a list and hit a normal line, close list
     if (inList) {
       html += "</ul>";
       inList = false;
     }
-
     // Normal paragraph
     html += `<p>${line}</p>`;
   });
-
   if (inList) html += "</ul>";
-
   return html;
 };
 
-    
     // collapse big gaps
    const reply = normalizeText(rawReply);
-
-
     const usermsg = {
       role: "user",
       text: message || "",
@@ -260,12 +252,9 @@ const normalizeText = (text) => {
   const contextValue = {
     extended,
     setExtended,
-    recentPrompts,
-    setRecentPrompts,
     loading,
     setShowResult,
     showResult,
-    resultData,
     onSent,
     input,
     setInput,
@@ -278,10 +267,6 @@ const normalizeText = (text) => {
     pass,
     setPass,
     deleteThread,
-
-
-
-
     threads,
     conversation,
     activeThreadId,

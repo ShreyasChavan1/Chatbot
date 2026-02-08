@@ -19,3 +19,28 @@
     opacity: 100;
   }
 }
+
+/* 1. The entire scrollbar area */
+::-webkit-scrollbar {
+  width: 10px;               /* Width of vertical scrollbar */
+  height: 10px;              /* Height of horizontal scrollbar */
+}
+
+/* 2. The track (the background) */
+
+::-webkit-scrollbar-track {
+
+  border-radius: 10px;
+}
+
+/* 3. The thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: #555; 
+  border-radius: 10px;
+  /* border: 1px solid #f1f1f1; Creates padding around the thumb */
+}
+
+/* 4. The thumb on hover */
+/* ::-webkit-scrollbar-thumb:hover {
+  
+} */

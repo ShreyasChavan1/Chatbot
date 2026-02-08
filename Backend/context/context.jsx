@@ -187,6 +187,12 @@ const normalizeText = (text) => {
       html += "<br>";
       return;
     }
+
+    if (line.startsWith("## ")) {
+  const heading = line.replace(/^##\s*/, "");
+  html += `<h2>${heading}</h2>`;
+  return;
+}
     // Headings: ### Title → <h3>Title</h3>
     if (line.startsWith("###")) {
       const heading = line.replace(/^#{1,6}\s*/, "");

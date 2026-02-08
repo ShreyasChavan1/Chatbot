@@ -2,126 +2,123 @@ import { useContext } from 'react'
 import './Main.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../../../Backend/context/context';
-import { auth } from '../../../../Backend/lib/firebase';
-import { signOut } from 'firebase/auth';
-
-
 
 
 const Main = () => {
-  const {setInput,input,onSent,loading,showResult,setPass,setEmail,setShowResult,username,conversation,user,isDark,signOutUser} = useContext(Context);
+  const { setInput, input, onSent, loading, showResult, setShowResult, username, conversation, user, isDark, signOutUser } = useContext(Context);
   // user.photoURL = null;
   return (
     <div className={isDark ? "main-dark" : "main"}>
-        <div className="nav">
-            <p onClick={() => {
-                  setShowResult(false); 
-                      
-              }}>Gemini</p>
-            <img onClick={()=>{signOutUser()}}  src={user?.photoURL || assets.user_icon}
- alt=""/>
-        </div>
-        <div className="main-container">
+      <div className="nav">
+        <p onClick={() => {
+          setShowResult(false);
+
+        }}>Gemini</p>
+        <img onClick={() => { signOutUser() }} src={user?.photoURL || assets.user_icon}
+          alt="user" />
+      </div>
+      <div className="main-container">
 
         {
-        conversation.length > 0 ? (
-       <div className="result">
-
-    {conversation.map((m, i) => (
-  m.role === "user" ? (
-
-    <div key={i} className="result-title">
-      <img src={user?.photoURL || assets.user_icon} alt="" />
-      <p>{m.text}</p>
-    </div>
-
-  ) : (
-
-    <div key={i} className="result-data">
-      <img src={assets.gemini_icon} alt="" />
-      <p dangerouslySetInnerHTML={{__html: m.text}}></p>
-    </div>
-
-  )
-))}
-
-
-    {loading && (
-      <div className="loader">
-        <hr /><hr /><hr />
-      </div>
-    )}
-
-  </div>
-    ) : (
-
-      !showResult?
-        <>
-            <div className="greet">
-              <p><span>Hello , {username}</span></p>
-              <p>How can I help you Today ?</p>
-            </div>
-            
-            <div className="cards">
-              <div className="card">
-                <p>Suggest a Beautiful places to see on upcoming road Trip</p>
-                <img onClick={()=>onSent("Suggest a Beautiful places to see on upcoming road Trip")} src={assets.compass_icon} alt="" />
-              </div>
-              <div className="card">
-                <p>Briefly summarize this text: urban planning</p>
-                <img onClick={()=>onSent("Briefly summarize this text: urban planning")} src={assets.bulb_icon} alt="" />
-              </div>
-              <div className="card">
-                <p>Describe Team bonding activities</p>
-                <img onClick={()=>onSent("Describe Team bonding activities")} src={assets.message_icon} alt="" />
-              </div>
-              <div className="card">
-                <p>Improve Readability of this code</p>
-                <img onClick={()=>onSent("Improve Readability of this code")} src={assets.code_icon} alt="" />
-              </div>
-            </div>
-            </>
-             : 
-             
+          conversation.length > 0 ? (
             <div className="result">
-      <div className="result-title">
-        <img src={user?.displayName || assets.user_icon} alt="" />
-        <p>{input}</p>
-      </div>
 
-      <div className="result-data">
-        <img src={assets.gemini_icon} alt="" />
-        {loading ? (
-          <div className="loader">
-            <hr /><hr /><hr />
-          </div>
-        ) : (
-          <p>Waiting for Gemini…</p>
-        )}
-      </div>
-    </div>
-    )
-  }  
-        
-            <div className="main-bottom">
-              <div className="searchbox">
-                <input
-                  onChange={(e)=>setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && input) onSent();
-                  }}
-                  value={input}
-                  type="text"
-                />
-                <div>
-                  {input?<img onClick={()=>onSent()} src={assets.send_icon} alt="" />:null}
+              {conversation.map((m, i) => (
+                m.role === "user" ? (
+
+                  <div key={i} className="result-title">
+                    <img src={user?.photoURL || assets.user_icon} alt="" />
+                    <p>{m.text}</p>
+                  </div>
+
+                ) : (
+
+                  <div key={i} className="result-data">
+                    <img src={assets.gemini_icon} alt="" />
+                    <p dangerouslySetInnerHTML={{ __html: m.text }}></p>
+                  </div>
+
+                )
+              ))}
+
+
+              {loading && (
+                <div className="loader">
+                  <hr /><hr /><hr />
+                </div>
+              )}
+
+            </div>
+          ) : (
+
+            !showResult ?
+              <>
+                <div className="greet">
+                  <p><span>Hello , {username}</span></p>
+                  <p>How can I help you Today ?</p>
+                </div>
+
+                <div className="cards">
+                  <div className="card">
+                    <p>Suggest a Beautiful places to see on upcoming road Trip</p>
+                    <img onClick={() => onSent("Suggest a Beautiful places to see on upcoming road Trip")} src={assets.compass_icon} alt="" />
+                  </div>
+                  <div className="card">
+                    <p>Briefly summarize this text: urban planning</p>
+                    <img onClick={() => onSent("Briefly summarize this text: urban planning")} src={assets.bulb_icon} alt="" />
+                  </div>
+                  <div className="card">
+                    <p>Describe Team bonding activities</p>
+                    <img onClick={() => onSent("Describe Team bonding activities")} src={assets.message_icon} alt="" />
+                  </div>
+                  <div className="card">
+                    <p>Improve Readability of this code</p>
+                    <img onClick={() => onSent("Improve Readability of this code")} src={assets.code_icon} alt="" />
+                  </div>
+                </div>
+              </>
+              :
+
+              <div className="result">
+                <div className="result-title">
+                  <img src={user?.displayName || assets.user_icon} alt="" />
+                  <p>{input}</p>
+                </div>
+
+                <div className="result-data">
+                  <img src={assets.gemini_icon} alt="" />
+                  {loading ? (
+                    <div className="loader">
+                      <hr /><hr /><hr />
+                    </div>
+                  ) : (
+                    <p>Waiting for Gemini…</p>
+                  )}
                 </div>
               </div>
-              <p className="bottom-info">
-                Gemini may display inaccurate info, including about people please double check before usage
-              </p>
+          )
+        }
+
+        <div className="main-bottom">
+          <div className="searchbox">
+            <input
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && input) onSent();
+              }}
+              value={input}
+              type="text"
+            />
+            <div>
+              {input ? <span onClick={() => onSent()} className="material-symbols-outlined">send</span> : null}
+              
             </div>
+          </div>
+          <p className="bottom-info">
+            Gemini may display inaccurate info, including about people please double check before usage
+          </p>
         </div>
+      </div>
     </div>
   )
 }

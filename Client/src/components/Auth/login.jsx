@@ -1,8 +1,8 @@
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { setDoc, doc,getDoc, deleteDoc } from "firebase/firestore";
+import { setDoc, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { auth, db } from "../../../../Backend/lib/firebase";
 
-export default function LoginForm({ email, setEmail, pass, setPass, load, setLoad ,setUsername}) {
+export default function LoginForm({ email, setEmail, pass, setPass, load, setLoad, setUsername }) {
 
   const googleLogin = async () => {
     try {
@@ -11,19 +11,19 @@ export default function LoginForm({ email, setEmail, pass, setPass, load, setLoa
       const res = await signInWithPopup(auth, provider);
       console.log(res)
       const user = res.user;
-const userRef = doc(db, "user", user.uid);
-const snap = await getDoc(userRef);
+      const userRef = doc(db, "user", user.uid);
+      const snap = await getDoc(userRef);
 
-if (!snap.exists()) {
-  await setDoc(userRef, {
-    username: user.displayName || user.email.split("@")[0],
-    email: user.email,
-    id: user.uid,
-    verified: true   // Google users are already verified
-  });
-  setUsername(user.displayName)
-  await setDoc(doc(db, "userChats", user.uid), { chats: {} });
-}
+      if (!snap.exists()) {
+        await setDoc(userRef, {
+          username: user.displayName || user.email.split("@")[0],
+          email: user.email,
+          id: user.uid,
+          verified: true   // Google users are already verified
+        });
+        setUsername(user.displayName)
+        await setDoc(doc(db, "userChats", user.uid), { chats: {} });
+      }
     } catch (err) {
       alert(err.message);
     } finally {
@@ -53,29 +53,40 @@ if (!snap.exists()) {
       <button disabled={load} onClick={async (e) => {
         e.preventDefault();
         setLoad(true);
-        const res = await signInWithEmailAndPassword(auth, email, pass);
-        console.log(res)
-        res.user.reload();
-        if (res.user.emailVerified) {
-          await setDoc(
-            doc(db, "user", res.user.uid),
-            { verified: true },
-            { merge: true }
-          );
-          setEmail("");
-          setPass("");
-          const userRef = doc(db, "user", res.user.uid);
-const snap = await getDoc(userRef);
+        try {
+          const res = await signInWithEmailAndPassword(auth, email, pass);
+          console.log(res)
+          res.user.reload();
+          if (res.user.emailVerified) {
+            await setDoc(
+              doc(db, "user", res.user.uid),
+              { verified: true },
+              { merge: true }
+            );
+            setEmail("");
+            setPass("");
+            const userRef = doc(db, "user", res.user.uid);
+            const snap = await getDoc(userRef);
 
-if (snap.exists()) {
-  setUsername(snap.data().username || "");
-}
+            if (snap.exists()) {
+              setUsername(snap.data().username || "");
+            }
 
-         
-        }else{
-         await deleteDoc(doc(db, "user", res.user.uid));
-        await res.user.delete(); 
+
+          } else {
+            alert("First Verify Email , Now register Again!")
+            setEmail("")
+            setPass("")
+            await deleteDoc(doc(db, "user", res.user.uid));
+            await res.user.delete();
+          }
+        } catch(err){
+          alert("Please create an account first !")
+          setEmail("")
+            setPass("")
+          
         }
+
         setLoad(false);
       }}>
         {load ? "Loading..." : "Login"}

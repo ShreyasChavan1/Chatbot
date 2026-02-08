@@ -89,6 +89,25 @@
     overflow-y: scroll;
     animation: fade-in 1.5s;
 }
+.dark-sidebar .recent{
+    display: flex;
+    flex-direction: column;
+    max-height: 63vh;
+    overflow-y: scroll;
+    animation: fade-in 1.5s;
+    color: #e2e6eb;
+}
+.delete-chat{
+    border-radius: 5px;
+    width: 30px;
+    height: 25px;
+}
+.delete-chat:hover{
+    background: #c6cacf; 
+}
+.dark-sidebar .delete-chat:hover{
+    background: #343538;
+}
 .recent::-webkit-scrollbar{
     display: none;
 }

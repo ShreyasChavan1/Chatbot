@@ -1,14 +1,9 @@
-import {React , useState , useEffect} from 'react'
+
 import './Sidebar.css';
-import { assets } from '../../assets/assets';
-import { auth } from '../../../../Backend/lib/firebase';
 import { Context } from '../../../../Backend/context/context';
 import { useContext } from 'react';
-import { signOut } from 'firebase/auth';
-
 
 const Sidebar = () => {
-    
     const {extended,setExtended,onSent,threads,openThread,createnewThread,deleteThread,loading,isDark,setIsDark,signOutUser} = useContext(Context);
    
 
@@ -47,8 +42,8 @@ const Sidebar = () => {
           
         </p>
       
-      <span className="material-symbols-outlined" onClick={(e) => {
-        e.stopPropagation();   // so you don’t open the chat by accident
+      <span className="material-symbols-outlined delete-chat" onClick={(e) => {
+        e.stopPropagation();   
         deleteThread(t.id);
       }}>delete</span>
       
@@ -60,8 +55,8 @@ const Sidebar = () => {
                 :null}
         </div>
         <div className="bottom">
-            <div onClick={()=>onSent("Please help me with usage of google Gemini")} className="bottom-item recent-entry">
-                <span className={`material-symbols-outlined ${loading ? "blinking" : ""}`}>help</span>
+            <div onClick={()=>onSent("Please help me with usage of google Gemini")} className="bottom-item recent-entry" data-tooltip="how gemini works?">
+                <span  className={`material-symbols-outlined`}>help</span>
                 {extended?<p>Help</p>:null}
             </div>
             <div onClick={()=>setIsDark(prev => !prev)} className="bottom-item recent-entry">

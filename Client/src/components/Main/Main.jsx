@@ -9,7 +9,7 @@ import { signOut } from 'firebase/auth';
 
 
 const Main = () => {
-  const {setInput,input,onSent,loading,showResult,setPass,setEmail,setShowResult,username,conversation} = useContext(Context);
+  const {setInput,input,onSent,loading,showResult,setPass,setEmail,setShowResult,username,conversation,user,isDark} = useContext(Context);
 
    const signOutl = async() =>{
     await signOut(auth);
@@ -19,13 +19,14 @@ const Main = () => {
 }
 
   return (
-    <div className="main">
+    <div className={isDark ? "main-dark" : "main"}>
         <div className="nav">
             <p onClick={() => {
                   setShowResult(false); 
                       
               }}>Gemini</p>
-            <img onClick={()=>{signOutl()}}  src={assets.user_icon} alt=""/>
+            <img onClick={()=>{signOutl()}}  src={user?.photoURL || assets.user_icon}
+ alt=""/>
         </div>
         <div className="main-container">
 
@@ -37,7 +38,7 @@ const Main = () => {
   m.role === "user" ? (
 
     <div key={i} className="result-title">
-      <img src={assets.user_icon} alt="" />
+      <img src={user?.photoURL || assets.user_icon} alt="" />
       <p>{m.text}</p>
     </div>
 
@@ -111,7 +112,14 @@ const Main = () => {
         
             <div className="main-bottom">
               <div className="searchbox">
-                <input onChange={(e)=>setInput(e.target.value)} value={input} type="text" placeholder='Enter your prompt here' />
+                <input
+                  onChange={(e)=>setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && input) onSent();
+                  }}
+                  value={input}
+                  type="text"
+                />
                 <div>
                   {input?<img onClick={()=>onSent()} src={assets.send_icon} alt="" />:null}
                 </div>

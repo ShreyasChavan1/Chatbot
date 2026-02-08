@@ -15,6 +15,7 @@ import send_icon from './send_icon.png'
 import gemini_icon from './gemini_icon.png'
 import logout_icon from './logout_icon.png'
 import delete_icon from './delete.png'
+import change_mode from './night-mode.png'
 
 export const assets = {
     history_icon,
@@ -34,4 +35,5 @@ export const assets = {
     gemini_icon,
     logout_icon,
     delete_icon,
+    change_mode
 }

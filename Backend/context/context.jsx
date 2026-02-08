@@ -11,6 +11,8 @@ export const Context = createContext();
 
 const ContextProvider = (props) => {
   const [extended, setExtended] = useState(false)
+  //theme change
+  const [isDark,setIsDark] = useState(false)
   //for generative Ai
   const [input, setInput] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -272,6 +274,8 @@ const normalizeText = (text) => {
     activeThreadId,
     createnewThread,
     openThread,
+    isDark,
+    setIsDark
   }
 
   return (

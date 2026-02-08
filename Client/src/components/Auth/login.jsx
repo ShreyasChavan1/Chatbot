@@ -8,7 +8,22 @@ export default function LoginForm({ email, setEmail, pass, setPass, load, setLoa
     try {
       setLoad(true);
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const res = await signInWithPopup(auth, provider);
+      console.log(res)
+      const user = res.user;
+const userRef = doc(db, "user", user.uid);
+const snap = await getDoc(userRef);
+
+if (!snap.exists()) {
+  await setDoc(userRef, {
+    username: user.displayName || user.email.split("@")[0],
+    email: user.email,
+    id: user.uid,
+    verified: true   // Google users are already verified
+  });
+  setUsername(user.displayName)
+  await setDoc(doc(db, "userChats", user.uid), { chats: {} });
+}
     } catch (err) {
       alert(err.message);
     } finally {

@@ -8,7 +8,7 @@ const Sidebar = () => {
    
 
   return (
-   <div className={isDark ? "dark-sidebar" : "sidebar"}>
+   <div className={`${isDark ? "dark-sidebar" : "sidebar"} ${extended ? "is-extended" : "collapsed"}`}>
         <div className="top">
             <span onClick={()=>setExtended(prev=>!prev)} className="material-symbols-outlined menu">menu</span>
               <div onClick={createnewThread} className="new-chat">

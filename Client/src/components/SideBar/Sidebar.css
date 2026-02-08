@@ -158,12 +158,25 @@
 }
 @media (max-width:600px){
     .sidebar{
-        display: none;
-        
+        position: absolute;
+        left: 0;
+        height: 100vh;
+        z-index: 50;
     }
     .dark-sidebar{
+        position: absolute;
+        left: 0;
+        height: 100vh;
+        z-index: 50;
+    }
+    .collapsed{
+        background: none;
+    }
+    
+    .collapsed .bottom,
+    .collapsed .new-chat,
+    .collapsed .recent{
         display: none;
-        
     }
 }
 @keyframes blink {

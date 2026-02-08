@@ -1,7 +1,5 @@
-- [x] Remove unused import in Client/src/App.jsx
-- [x] Remove commented-out code in Client/src/components/Auth/auth.jsx
-- [x] Remove commented-out code in Client/src/components/SideBar/Sidebar.jsx
-- [x] Remove commented-out code in Client/src/components/Main/Main.jsx
-- [x] Add signOutUser function in Backend/context/context.jsx
-- [x] Update Main.jsx to use context signOutUser
-- [x] Update Sidebar.jsx to use context signOutUser
+# TODO: Fix Card Alignment and Dimensions in Dark Mode for Mobile Screens
+
+- [x] Update the mobile media query in Main.css to use CSS Grid for .cards container instead of Flexbox, ensuring consistent alignment with light mode.
+- [ ] Override card height and width for dark mode in mobile to match light mode (height: 100px, width: 130px).
+- [ ] Test the changes to confirm cards align and dimension properly in mobile dark mode.

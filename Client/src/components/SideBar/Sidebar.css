@@ -1,25 +1,29 @@
 .material-symbols-outlined {
-  /* This ensures every icon in your app starts at the same size */
-  font-size: 24px; 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  width: 1em;  /* Ensures a square footprint */
-  height: 1em;
+    /* This ensures every icon in your app starts at the same size */
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 1em;
+    /* Ensures a square footprint */
+    height: 1em;
 }
+
 .dark-sidebar .material-symbols-outlined {
-  /* This ensures every icon in your app starts at the same size */
-  font-size: 24px; 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  width: 1em;  /* Ensures a square footprint */
-  height: 1em;
-  color: #e2e6eb;
+    /* This ensures every icon in your app starts at the same size */
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 1em;
+    /* Ensures a square footprint */
+    height: 1em;
+    color: #e2e6eb;
 }
-.sidebar{
+
+.sidebar {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -28,7 +32,8 @@
     transition: background-color 0.5s ease;
     padding: 25px 15px;
 }
-.dark-sidebar{
+
+.dark-sidebar {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -38,20 +43,21 @@
     padding: 25px 15px;
 }
 
-.sidebar img{
-    width: 20px;
-}
-.dark-sidebar img{
+.sidebar img {
     width: 20px;
 }
 
-.menu{
+.dark-sidebar img {
+    width: 20px;
+}
+
+.menu {
     display: block;
     margin-left: 10px;
     cursor: pointer;
 }
 
-.new-chat{
+.new-chat {
     margin-top: 50px;
     margin-bottom: 5px;
     display: inline-flex;
@@ -65,7 +71,8 @@
     cursor: pointer;
     width: 100%;
 }
-.dark-sidebar .new-chat{
+
+.dark-sidebar .new-chat {
     margin-top: 50px;
     margin-bottom: 5px;
     display: inline-flex;
@@ -79,17 +86,20 @@
     cursor: pointer;
     width: 100%;
 }
-.dark-sidebar .new-chat:hover{
+
+.dark-sidebar .new-chat:hover {
     background-color: #27282a;
 }
-.recent{
+
+.recent {
     display: flex;
     flex-direction: column;
     max-height: 63vh;
     overflow-y: scroll;
     animation: fade-in 1.5s;
 }
-.dark-sidebar .recent{
+
+.dark-sidebar .recent {
     display: flex;
     flex-direction: column;
     max-height: 63vh;
@@ -97,100 +107,121 @@
     animation: fade-in 1.5s;
     color: #e2e6eb;
 }
-.delete-chat{
+
+.delete-chat {
     border-radius: 5px;
     width: 30px;
     height: 25px;
 }
-.delete-chat:hover{
-    background: #c6cacf; 
+
+.delete-chat:hover {
+    background: #c6cacf;
 }
-.dark-sidebar .delete-chat:hover{
+
+.dark-sidebar .delete-chat:hover {
     background: #343538;
 }
-.recent::-webkit-scrollbar{
+
+.recent::-webkit-scrollbar {
     display: none;
 }
 
-.sidebar .recent-title{
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
-.dark-sidebar .recent-title{
+.sidebar .recent-title {
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
-.sidebar .recent-entry{
+.dark-sidebar .recent-title {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.sidebar .recent-entry {
     display: flex;
     align-items: start;
     gap: 10px;
-    padding:10px;
+    padding: 10px;
     padding-right: 40px;
     border-radius: 50px;
     color: #282828;
     cursor: pointer;
 }
-.dark-sidebar .recent-entry{
+
+.dark-sidebar .recent-entry {
     display: flex;
     align-items: start;
     gap: 10px;
-    padding:10px;
+    padding: 10px;
     padding-right: 40px;
     border-radius: 50px;
     color: #e3e3e3;
     cursor: pointer;
 }
 
-.sidebar .recent-entry:hover{
+.sidebar .recent-entry:hover {
     background-color: #e2e6eb;
 }
-.dark-sidebar .recent-entry:hover{
+
+.dark-sidebar .recent-entry:hover {
     background-color: #27282a;
 }
-.bottom{
+
+.bottom {
     display: flex;
     flex-direction: column;
 }
-.bottom-item{
+
+.bottom-item {
     padding-right: 10px;
     cursor: pointer;
 }
-@media (max-width:600px){
-    .sidebar{
+
+@media (max-width:600px) {
+    .sidebar {
         position: absolute;
         left: 0;
         top: 0;
-    bottom: 0;
-    height: auto;
+        bottom: 0;
+        height: auto;
         z-index: 50;
         border-radius: 10px;
     }
-    .dark-sidebar{
+
+    .dark-sidebar {
         position: absolute;
         left: 0;
-       top: 0;
-    bottom: 0;
-    height: auto;
+        top: 0;
+        bottom: 0;
+        height: auto;
         z-index: 50;
         border-radius: 10px;
     }
-    .collapsed{
+
+    .collapsed {
         background: none;
     }
-    
+
     .collapsed .bottom,
     .collapsed .new-chat,
-    .collapsed .recent{
+    .collapsed .recent {
         display: none;
     }
 }
+
 @keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0.2; }
-  100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .blinking {
-  animation: blink 0.6s infinite;
+    animation: blink 0.6s infinite;
 }

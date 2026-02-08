@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 
-import { onAuthStateChanged } from 'firebase/auth'
+import { onAuthStateChanged ,signOut} from 'firebase/auth'
 import { auth } from "../lib/firebase";
 import { doc, deleteDoc, getDocs, setDoc, onSnapshot, collection, serverTimestamp, addDoc, orderBy, getDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
@@ -251,6 +251,13 @@ const normalizeText = (text) => {
   }
 
 
+  const signOutUser = async () => {
+    await signOut(auth);
+    setPass("");
+    setEmail("");
+    setUsername("");
+  };
+
   const contextValue = {
     extended,
     setExtended,
@@ -275,7 +282,8 @@ const normalizeText = (text) => {
     createnewThread,
     openThread,
     isDark,
-    setIsDark
+    setIsDark,
+    signOutUser
   }
 
   return (

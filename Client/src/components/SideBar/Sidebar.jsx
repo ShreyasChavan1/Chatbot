@@ -9,21 +9,12 @@ import { signOut } from 'firebase/auth';
 
 const Sidebar = () => {
     
-    const {setPass,setEmail,extended,setExtended,onSent,threads,openThread,createnewThread,deleteThread,loading,setUsername,isDark,setIsDark} = useContext(Context);
-    
-    const signOutLogic = async() =>{
-        await signOut(auth);
-        // setUser("");
-        setPass("");
-        setEmail("");
-        setUsername("")
-    }
+    const {extended,setExtended,onSent,threads,openThread,createnewThread,deleteThread,loading,isDark,setIsDark,signOutUser} = useContext(Context);
    
 
   return (
    <div className={isDark ? "dark-sidebar" : "sidebar"}>
         <div className="top">
-            {/* <img src={assets.menu_icon} alt=""  className="menu" /> */}
             <span onClick={()=>setExtended(prev=>!prev)} className="material-symbols-outlined menu">menu</span>
               <div onClick={createnewThread} className="new-chat">
                 <span className="material-symbols-outlined">add</span>
@@ -77,7 +68,7 @@ const Sidebar = () => {
                 <span className="material-symbols-outlined">{isDark ? "light_mode" :"dark_mode"}</span>
                 {extended?<p>{isDark ? "Light" : "Dark"}</p>:null}
             </div>
-            <div onClick={signOutLogic} className="bottom-item recent-entry">
+            <div onClick={signOutUser} className="bottom-item recent-entry">
                 <span className="material-symbols-outlined">logout</span>
                 {extended?<p>logout</p>:null}
             </div>

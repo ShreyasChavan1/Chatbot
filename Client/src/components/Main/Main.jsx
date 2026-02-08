@@ -9,15 +9,8 @@ import { signOut } from 'firebase/auth';
 
 
 const Main = () => {
-  const {setInput,input,onSent,loading,showResult,setPass,setEmail,setShowResult,username,conversation,user,isDark} = useContext(Context);
-
-   const signOutl = async() =>{
-    await signOut(auth);
-    
-    setPass("");
-    setEmail("");
-}
-
+  const {setInput,input,onSent,loading,showResult,setPass,setEmail,setShowResult,username,conversation,user,isDark,signOutUser} = useContext(Context);
+  // user.photoURL = null;
   return (
     <div className={isDark ? "main-dark" : "main"}>
         <div className="nav">
@@ -25,7 +18,7 @@ const Main = () => {
                   setShowResult(false); 
                       
               }}>Gemini</p>
-            <img onClick={()=>{signOutl()}}  src={user?.photoURL || assets.user_icon}
+            <img onClick={()=>{signOutUser()}}  src={user?.photoURL || assets.user_icon}
  alt=""/>
         </div>
         <div className="main-container">
@@ -75,8 +68,8 @@ const Main = () => {
                 <img onClick={()=>onSent("Suggest a Beautiful places to see on upcoming road Trip")} src={assets.compass_icon} alt="" />
               </div>
               <div className="card">
-                <p>Breifly summarize this texxt : urban planning</p>
-                <img onClick={()=>onSent("Breifly summarize this texxt : urban planning")} src={assets.bulb_icon} alt="" />
+                <p>Briefly summarize this text: urban planning</p>
+                <img onClick={()=>onSent("Briefly summarize this text: urban planning")} src={assets.bulb_icon} alt="" />
               </div>
               <div className="card">
                 <p>Describe Team bonding activities</p>
@@ -92,7 +85,7 @@ const Main = () => {
              
             <div className="result">
       <div className="result-title">
-        <img src={assets.user_icon} alt="" />
+        <img src={user?.displayName || assets.user_icon} alt="" />
         <p>{input}</p>
       </div>
 

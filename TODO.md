@@ -1,3 +1,7 @@
-- [ ] Remove email verification check in login.jsx
-- [ ] Update App.jsx to allow access without email verification
-- [ ] Remove email verification sending in Registration.jsx
+- [x] Remove unused import in Client/src/App.jsx
+- [x] Remove commented-out code in Client/src/components/Auth/auth.jsx
+- [x] Remove commented-out code in Client/src/components/SideBar/Sidebar.jsx
+- [x] Remove commented-out code in Client/src/components/Main/Main.jsx
+- [x] Add signOutUser function in Backend/context/context.jsx
+- [x] Update Main.jsx to use context signOutUser
+- [x] Update Sidebar.jsx to use context signOutUser

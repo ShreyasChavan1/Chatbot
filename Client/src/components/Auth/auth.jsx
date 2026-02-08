@@ -40,7 +40,6 @@ export default function AuthPage() {
         
       )}
       <div className="auth-toggle" onClick={()=>setIsLogin(prev => !prev)}>
-        {/* <button onClick={() => setIsLogin(true)}>Login</button> */}
         {isLogin ? "New User ?" : "Login"}
       </div>
     </div>

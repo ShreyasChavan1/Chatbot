@@ -271,6 +271,9 @@
     }
     .result{
         overflow-x: hidden;
+        white-space: normal;      /* key fix */
+  word-wrap: break-word;    /* breaks long words */
+  overflow-wrap: anywhere; 
     }
     .main .nav::before {
         content: "";

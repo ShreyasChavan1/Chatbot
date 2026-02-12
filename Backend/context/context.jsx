@@ -48,7 +48,7 @@ const ContextProvider = (props) => {
     if (!user) return;
     const threadsRef = collection(db, "userChats", user.uid, "threads");
     const unsub = onSnapshot(threadsRef, (snap) => {
-      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));// here for each data id and data are two different ojbects , to keep them in same object we copy d.data() and use it in object of d.id
       setThreads(list)
     })
     return () => unsub();

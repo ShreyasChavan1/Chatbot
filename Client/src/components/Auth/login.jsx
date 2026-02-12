@@ -83,7 +83,7 @@ export default function LoginForm({ email, setEmail, pass, setPass, load, setLoa
         } catch(err){
           alert("Please create an account first !")
           setEmail("")
-            setPass("")
+          setPass("")
           
         }
 
